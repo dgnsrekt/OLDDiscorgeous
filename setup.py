@@ -11,7 +11,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'discord-gtts-messenger'
+NAME = 'discorgtts'
 DESCRIPTION = 'Discord bot that connects to a voice channel and sends GTTS messages.'
 URL = 'https://github.com/run2dev/myproject'
 EMAIL = 'run2devtest@gmail.com'
@@ -21,7 +21,7 @@ VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    # 'requests', 'maya', 'records',
+    'Click'
 ]
 
 # The rest you shouldn't have to touch too much :)
@@ -88,20 +88,16 @@ setup(
     version=about['__version__'],
     description=DESCRIPTION,
     long_description=long_description,
+    license='MIT',
     author=AUTHOR,
     author_email=EMAIL,
-    python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=('tests',)),
-    # If your package is a single module, use this instead of 'packages':
-    # py_modules=['mypackage'],
-
-    # entry_points={
-    #     'console_scripts': ['mycli=mymodule:cli'],
-    # },
     install_requires=REQUIRED,
+    python_requires=REQUIRES_PYTHON,
+    entry_points={'console_scripts':
+                  ['discorgtts=discorgtts.cli:main']},
     include_package_data=True,
-    license='MIT',
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -114,7 +110,4 @@ setup(
         'Topic :: System :: Operating System Kernels :: Linux'
     ],
     # $ setup.py publish support.
-    cmdclass={
-        'upload': UploadCommand,
-    },
-)
+    cmdclass={'upload': UploadCommand})
