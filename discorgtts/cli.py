@@ -1,9 +1,24 @@
 import click
 
 
-@click.command()
+@click.group()
 def main():
-    print('First Command')
+    pass
+
+
+@main.command('server')
+def server():
+    click.echo('running server')
+
+
+@main.command('client')
+def client():
+    click.echo('running client')
+
+
+@main.command('sshclient')
+def server():
+    click.echo('running sshclient')
 
 
 if __name__ == '__main__':
