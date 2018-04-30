@@ -5,16 +5,17 @@ verify_ssl = true
 name = "pypi"
 
 
-[packages]
-
-click = "*"
-toml = "*"
-gtts = "*"
-tinytag = "*"
-
-
 [dev-packages]
 
+
+
+[packages]
+
+toml = "*"
+click = "*"
+gtts = "*"
+tinytag = "*"
+"discord.py" = {extras = ["voice"]}
 
 
 [requires]
