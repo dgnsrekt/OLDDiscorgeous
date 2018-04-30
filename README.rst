@@ -1,6 +1,14 @@
 discord-gtts-messenger
 ========================
+Install
+-------
+On Linux environments, installing voice requires getting the following dependencies:
 
+libffi
+
+libnacl
+
+apt install libffi-dev libnacl-dev
 
 Features
 --------
