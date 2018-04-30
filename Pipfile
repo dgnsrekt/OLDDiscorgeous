@@ -8,6 +8,9 @@ name = "pypi"
 [packages]
 
 click = "*"
+toml = "*"
+gtts = "*"
+tinytag = "*"
 
 
 [dev-packages]

@@ -16,12 +16,14 @@ def main(context, filename, bind_ip, bind_port):
 
 
 @main.command('server')
+@click.option('--accent')  # XXX: <- add default that calls config mod
 @click.pass_context
-def server(context):
+def server(context, accent):
     # XXX: Args BIND_IP, BIND_PORT, FILE_NAME
     # XXX: Accent -> Random, 'UK', 'US', 'AU'
     # XXX: Discord -> Channel_id,
     click.echo('server')
+    click.echo(accent)
     print(context.obj)
 
 
@@ -32,15 +34,15 @@ def client(context):
     click.echo('running client')
 
 
-@main.command('sshclient')
+@main.command('client-ssh')
 @click.pass_context
-def sshclient(context):
+def clientssh(context):
     click.echo('running sshclient')
 
 
-@main.command('chat')
+@main.command('chat-client-ssh')
 @click.pass_context
-def chatclient(context):
+def sshchatclient(context):
     click.echo('running sshclient')
 
 
