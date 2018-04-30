@@ -1,14 +1,14 @@
 import click
 
+import config
+
 
 @click.group()
-@click.option('-f', '--filename')  # XXX: <- add default that calls config mod
 @click.option('--bind_ip')  # XXX: <- add default that calls config mod
 @click.option('--bind_port')  # XXX: <- add default that calls config mod
 @click.pass_context
 def main(context, filename, bind_ip, bind_port):
     context.obj = {
-        'FILENAME': filename,
         'BIND_IP': bind_ip,
         'BIND_PORT': bind_port
     }
@@ -27,23 +27,23 @@ def server(context, accent):
     print(context.obj)
 
 
-@main.command('client')
-@click.pass_context
-def client(context):
-    # XXX:HOST_ADDRESS, USERNAME, PORT
-    click.echo('running client')
-
-
-@main.command('client-ssh')
-@click.pass_context
-def clientssh(context):
-    click.echo('running sshclient')
-
-
-@main.command('chat-client-ssh')
+@main.command('chat-ssh')
 @click.pass_context
 def sshchatclient(context):
     click.echo('running sshclient')
+
+
+@main.command('chat-local')
+@click.pass_context
+def localchatclient(context):
+    click.echo('running sshclient')
+
+
+@main.command('create-config')
+def createconfig():
+    '''Create a default config file'''
+    click.echo('creating blank configuration file.')
+    config.create_default_config_file()
 
 
 if __name__ == '__main__':
