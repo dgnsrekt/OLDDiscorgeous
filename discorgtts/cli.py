@@ -21,25 +21,36 @@ def server(context):
     # XXX: Args BIND_IP, BIND_PORT, FILE_NAME
     # XXX: Accent -> Random, 'UK', 'US', 'AU'
     # XXX: Discord -> Channel_id,
-    click.echo('erver')
+    click.echo('server')
     print(context.obj)
 
 
 @main.command('client')
-def client():
+@click.pass_context
+def client(context):
     # XXX:HOST_ADDRESS, USERNAME, PORT
     click.echo('running client')
 
 
 @main.command('sshclient')
-def sshclient():
+@click.pass_context
+def sshclient(context):
     click.echo('running sshclient')
 
 
 @main.command('chat')
-def chatclient():
+@click.pass_context
+def chatclient(context):
     click.echo('running sshclient')
 
 
 if __name__ == '__main__':
+
+    logo = """
+ __ __      __    __  __       __       __  __     __    __  __      __    ___
+|_ /  \|\/|/  \  |  \|__)|\  /|_ |\ |  |  \|_ \  /|_ |  /  \|__)|\/||_ |\ | |
+|  \__/|  |\__/  |__/| \ | \/ |__| \|  |__/|__ \/ |__|__\__/|   |  ||__| \| |
+    """
+    print(logo)
+
     main()
