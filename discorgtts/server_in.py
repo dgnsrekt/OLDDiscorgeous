@@ -1,15 +1,20 @@
 import asyncore
-from voice_message import VoiceMessage
+import sys
+from voice_message import VoiceMessageFile, VoiceMessageQueue
+from threading import Thread
+from time import sleep
 
 
 class DiscordGttsHandler(asyncore.dispatcher_with_send):
 
     def handle_read(self):
-        data = self.recv(8192)
-        self.dispatcher = VoiceMessage()
-        if len(data) > 2:
+        data = self.recv(4096)  # add to config
+        data = data.decode().replace('\n', '').replace('\r', '')
+        print(f'found: {data}')
+        print(f'len: {len(data)}')
+        if data:
             self.send(b'ACK!\n')
-            self.dispatcher.generate_gtts(data.decode())
+            VoiceMessageQueue.push(data)
 
 
 class DiscordGttsServer(asyncore.dispatcher):
@@ -19,7 +24,7 @@ class DiscordGttsServer(asyncore.dispatcher):
         self.create_socket()
         self.set_reuse_addr()
         self.bind((host, port))
-        self.listen(1)  # was 5
+        self.listen(10)  # add to config
         print(f'Listing on {host} {port}')
 
     def handle_accepted(self, sock, addr):
@@ -27,6 +32,20 @@ class DiscordGttsServer(asyncore.dispatcher):
         handler = DiscordGttsHandler(sock)
 
 
+def worker():
+    vmf = VoiceMessageFile()
+    while True:
+        if not vmf.file_exists:
+            msg = VoiceMessageQueue.pop()
+            vmf.create_message(msg)  # logging here
+        sleep(1)
+
+
 if __name__ == '__main__':
     server = DiscordGttsServer('localhost', 6666)
-    asyncore.loop()
+    t = Thread(target=worker)
+    try:
+        t.start()
+        asyncore.loop()
+    except (KeyboardInterrupt, SystemExit):
+        sys.exit()
