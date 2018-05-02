@@ -1,3 +1,7 @@
+from time import sleep
+
+from client import DiscorGttsClient
+
 text1 = list('12345678910')
 text2 = list('abcdefghijklmnopqrstuvwxyz')
 text3 = """This was a triumph!
@@ -6,7 +10,7 @@ I'm making a note here Huge success!
 It's hard to overstate my satisfaction.
 
 At Fomo D D: We do what we must
-because we canFor the good of all of us.
+because we can for the good of all of us.
 Except the ones who are dead.
 
 But there's no sense crying over every mistake.
@@ -54,40 +58,12 @@ And when you're dead I will be still alive
 Still alive.
 
 Still alive.""".split('\n')
+test_messages = text3 + text2 + text1
+test_messages = list(filter(None, test_messages))  # filter out empty str
 
-import os
-from time import sleep
-import socket
+client = DiscorGttsClient('0.0.0.0', 6666)
 
-msg = text3 + text2 + text1
-
-
-def send_voice_msg(message):
-    if message:
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            client.connect(('0.0.0.0', 6666))
-            sleep(.5)
-            client.send(message.encode())
-            response = client.recv(4096)
-            client.close()
-            if response:
-                print('message sent.')
-            else:
-                print('message not acknowledged.')
-
-        except ConnectionRefusedError:
-            print('meesage not sent.')
-        except ConnectionResetError as e:
-            print(e)
-    else:
-        print('Not valid')
-
-
-if __name__ == '__main__':
-
-    for x in msg:
-        if len(x) >= 1:
-            print(len(x))
-            send_voice_msg(x)
-        sleep(1.5)
+for message in test_messages:
+    print(message)
+    client.send_voice_msg(message)
+    sleep(5)
