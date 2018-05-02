@@ -1,6 +1,6 @@
 # TODO: Rename file DiscordGttsServerInput
 # TODO: Convert to ASYNCIO
-# https://docs.python.org/3/library/asyncio-protocol.html#udp-echo-server-protocol
+# https://docs.python.org/3/library/asyncio-protocol.html#udp-echo-server-protocol -> 18.5.4.3.2. TCP echo server protocol
 import asyncore
 import sys
 from voice_message import VoiceMessageFile, VoiceMessageQueue
@@ -53,7 +53,7 @@ class DiscordGttsServerInput:  # TODO: Change to DiscordGttsInputServer
 
     def run(self):
         try:
-            self.worker.start()
+            # self.worker.start()
             asyncore.loop()
         except (KeyboardInterrupt, SystemExit):
             sys.exit()
