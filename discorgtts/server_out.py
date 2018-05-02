@@ -1,3 +1,5 @@
+# TODO: Rename file DiscordGttsServerOuput
+
 import asyncio
 import io
 import os
@@ -5,12 +7,10 @@ import os
 import discord
 from config import load_config_file
 from voice_message import VoiceMessageFile
-from time import time
+from time import time, sleep
 
-config = load_config_file()['server']
-channel_id = config['channel_id']
-token = config['discord_voice_token']
-message = VoiceMessageFile()
+import logging as log
+
 
 if not discord.opus.is_loaded():
     # the 'opus' library here is opus.dll on windows
@@ -21,36 +21,69 @@ if not discord.opus.is_loaded():
     discord.opus.load_opus('opus')
 
 
-async def on_ready():
-    await client.wait_until_ready()
+class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
+    def __init__(self, token,  channel_id, sample_rate=48000,
+                 audio_channel=1, sleep_time=0.75):
 
-    channel = discord.Object(id=channel_id)
-    voice = await client.join_voice_channel(channel)
-    voice.encoder_options(sample_rate=48000, channels=1)
+        self.token = token
+        self.channel_id = channel_id
+        self.sample_rate = sample_rate
+        self.audio_channel = audio_channel
 
-    start_time = time()
-    message.delete()
-    print(f'start: {start_time}')
+        self.sleep_time = sleep_time  # .75
 
-    while True:
-        if message.file_exists:
-            await asyncio.sleep(.75)
-            updated_time = message.mtime
-            if updated_time > start_time:
-                start_time = updated_time
-                player = voice.create_ffmpeg_player(message.file)
-                player.start()
-            if player.is_done():
-                player.stop()
-                message.delete()
-            if player.error:
-                print(player.error)
-            if player.is_playing() == False:
-                player.stop()
-                message.delete()
-        await asyncio.sleep(.75)
+        self.vmf = VoiceMessageFile()
+        self.client = discord.Client()
+
+    async def on_ready(self):
+        await self.client.wait_until_ready()
+
+        channel = discord.Object(id=self.channel_id)
+        voice = await self.client.join_voice_channel(channel)
+        voice.encoder_options(sample_rate=self.sample_rate, channels=self.audio_channel)
+
+        start_time = time()
+        self.vmf.delete()  # deletes message file
+        log.info(f'Server Start Time: {start_time}')
+
+        while True:
+            if self.vmf.file_exists:
+                await asyncio.sleep(self.sleep_time)
+                updated_time = self.vmf.mtime
+
+                if updated_time > start_time:
+                    start_time = updated_time
+                    player = voice.create_ffmpeg_player(self.vmf.file)
+                    player.start()
+
+                if player.is_done():
+                    player.stop()
+                    self.vmf.delete()
+
+                if player.error:
+                    print(player.error)
+
+                if player.is_playing() == False:
+                    player.stop()
+                    self.vmf.delete()
+
+            await asyncio.sleep(self.sleep_time)
+
+    def run(self):
+        self.client.loop.create_task(self.on_ready())
+        self.client.run(self.token)
+
+
+def main():
+    sleep(1)
+    print('running output server')
+    config = load_config_file()['server']
+    token = config['discord_voice_token']
+    channel_id = config['channel_id']
+
+    server = DiscordGttsServerOutput(token, channel_id)
+    server.run()
+
 
 if __name__ == '__main__':
-    client = discord.Client()
-    client.loop.create_task(on_ready())
-    client.run(token)
+    main()
