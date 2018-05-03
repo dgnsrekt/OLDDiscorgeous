@@ -7,4 +7,4 @@ VERSION = (0, 0, 1)
 
 __version__ = '.'.join(map(str, VERSION))
 
-print(__version__)
+#print(__version__)
