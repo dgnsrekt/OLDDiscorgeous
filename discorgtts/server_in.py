@@ -42,6 +42,8 @@ class DiscordGttsServerInput:  # TODO: Change to DiscordGttsInputServer
     def __init__(self):
         self.server = DiscordGttsServer('localhost', 6666)
         self.worker = Thread(target=self.start_voice_messsage_queue)  # TODO change this to async
+        self.worker2 = Thread(target=asyncore.loop, name='Asyncore Loop')
+        self.stop_queue = False
 
     def start_voice_messsage_queue(self):
         vmf = VoiceMessageFile()
@@ -50,12 +52,15 @@ class DiscordGttsServerInput:  # TODO: Change to DiscordGttsInputServer
                 message = VoiceMessageQueue.pop()
                 vmf.create_message(message)  # logging here
             sleep(1)  # try .5 for speed
+        return
 
     def run(self):
         try:
-            # self.worker.start()
-            asyncore.loop()
+            self.worker.start()
+            self.worker2.start()
         except (KeyboardInterrupt, SystemExit):
+            self.worker.join()
+            self.worker2.join()
             sys.exit()
 
 
