@@ -89,3 +89,8 @@ ENV/
 .ropeproject
 *.npy
 *.pkl
+
+# extra
+*.bak
+*.toml
+*.mp3
