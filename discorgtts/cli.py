@@ -1,16 +1,16 @@
-import click
-
-from pathlib import Path
-import config
-import os
 from multiprocessing import Pool
+from pathlib import Path
+import os
+
+from config import Configuration
+
+import click
 
 SERVER_IN_FILEPATH = Path(__file__).parent / 'server_in.py'
 SERVER_OUT_FILEPATH = Path(__file__).parent / 'server_out.py'
-
-print(SERVER_IN_FILEPATH.exists())
-print(SERVER_OUT_FILEPATH.exists())
 SERVER_PROCESSES = (f'{SERVER_OUT_FILEPATH}', f'{SERVER_IN_FILEPATH}')
+
+_config = Configuration()
 
 
 def run_process(process):
@@ -18,52 +18,62 @@ def run_process(process):
 
 
 @click.group()
-@click.option('--bind_ip')  # XXX: <- add default that calls config mod
-@click.option('--bind_port')  # XXX: <- add default that calls config mod
-@click.pass_context
-def main(context, bind_ip, bind_port):
-    context.obj = {
-        'BIND_IP': bind_ip,
-        'BIND_PORT': bind_port
-    }
+def main():
     pass
 
 
 @main.command('server')
-@click.option('--accent')  # XXX: <- add default that calls config mod
-@click.pass_context
-def server(context, accent):
-
-    # XXX: Args BIND_IP, BIND_PORT, FILE_NAME
-    # XXX: Accent -> Random, 'UK', 'US', 'AU'
-    # XXX: Discord -> Channel_id,
-    click.echo('server')
-    click.echo(accent)
-    print(context.obj)
+def server():
+    click.echo('running server...')
     pool = Pool(processes=2)
     pool.map(run_process, SERVER_PROCESSES)
 
 
 @main.command('chat-ssh')
-@click.pass_context
-def sshchatclient(context):
+def sshchatclient():
     click.echo('running sshclient')
 
 
 @main.command('chat-local')
-@click.pass_context
-def localchatclient(context):
+def localchatclient():
     click.echo('running sshclient')
 
 
-@main.command('create-config')  # TODO: Change to configuration This
-def createconfig():
-    '''Create a default config file'''
+def client_settings():
+    store_settings = dict()
+    for key, value in _config.client_settings.items():
+        store_settings[key] = click.prompt(f'{key}:', default=value)
+    return {'client': store_settings}
+
+
+def server_settings():
+    store_settings = dict()
+    for key, value in _config.server_settings.items():
+        store_settings[key] = click.prompt(f'{key}:', default=value)
+    return {'server': store_settings}
+
+
+def create_config_file():
+    '''Creates a blank default config file'''
     click.echo('creating blank configuration file.')
     config.create_default_config_file()
-# TODO: This will create a file if it doesnt exists
-# TODO: also if a flag is set it will change the option in the toml file
-# TODO: --clean-config-file : Creates a default config moves last config to .bak
+
+
+@main.command('settings')  # TODO: Change to configuration This
+@click.option('--server', is_flag=True, help='Sets server settings in configfile.')
+@click.option('--client', is_flag=True, help='Sets client settings in configfile.')
+@click.option('--default', is_flag=True, help='Returns settings back to default in configfile.')
+def settings(server, client, default):
+    if not any((server, client, default)):
+        click.echo('run setting --help for options')
+    if server:
+        new_server_settings = server_settings()
+        _config.update_config_file(new_server_settings)
+    if client:
+        new_client_settings = client_settings()
+        _config.update_config_file(new_client_settings)
+    if default:
+        _config.force_overwrite_default_settings()
 
 
 if __name__ == '__main__':
