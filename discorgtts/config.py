@@ -11,7 +11,7 @@ class Configuration:
                       'discord_voice_token': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
                       'server_ip': '0.0.0.0',
                       'server_port': '0000',
-                      'language': 'eu-us',
+                      'language': 'en-us',
                       'logging': 'DEBUG',
                       'encoder_sample_rate': '48000',
                       'encoder_channel': '1',
