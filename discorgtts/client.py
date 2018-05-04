@@ -40,5 +40,5 @@ class DiscorGttsClient:
             client.close()
 
 
-# client = DiscorGttsClient('0.0.0.0', 6666)
-# client.send_voice_msg('kevin')
+class DiscordGttsSSHClient(DiscorGttsClient):
+    pass
