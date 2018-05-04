@@ -16,6 +16,11 @@ Features
 
 To Do
 -----
+Tests 
+logging
+ssh client
+install cli
+client shell
 
 
 More Resources
