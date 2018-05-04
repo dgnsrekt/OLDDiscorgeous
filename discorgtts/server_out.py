@@ -5,7 +5,8 @@ import io
 import os
 
 import discord
-from config import load_config_file
+from config import Configuration
+
 from voice_message import VoiceMessageFile
 from time import time, sleep
 
@@ -43,7 +44,7 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
         voice.encoder_options(sample_rate=self.sample_rate, channels=self.audio_channel)
 
         start_time = time()
-        self.vmf.delete()  # deletes message file
+        self.vmf.remove()  # deletes message file
         log.info(f'Server Start Time: {start_time}')
 
         while True:
@@ -58,14 +59,14 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
 
                 if player.is_done():
                     player.stop()
-                    self.vmf.delete()
+                    self.vmf.remove()
 
                 if player.error:
                     print(player.error)
 
                 if player.is_playing() == False:
                     player.stop()
-                    self.vmf.delete()
+                    self.vmf.remove()
 
             await asyncio.sleep(self.sleep_time)
 
@@ -77,9 +78,12 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
 def main():
     sleep(1)
     print('running output server')
-    config = load_config_file()['server']
-    token = config['discord_voice_token']
-    channel_id = config['channel_id']
+    config = Configuration()
+
+    token = config.server_settings['discord_voice_token']
+    channel_id = config.server_settings['channel_id']
+    sample_rate = config.server_settings['encoder_sample_rate']
+    encoder_channel_rate = config.server_settings['encoder_channel']
 
     server = DiscordGttsServerOutput(token, channel_id)
     server.run()
