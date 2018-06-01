@@ -1,3 +1,4 @@
+# TODO: MOVE TO EXAMPLE FOLDER
 from time import sleep
 
 from client import DiscorGttsClient

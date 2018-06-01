@@ -13,9 +13,10 @@ name = "pypi"
 
 toml = "*"
 click = "*"
-gTTS = "*"
+gtts = "*"
 tinytag = "*"
 "discord.py" = {extras = ["voice"]}
+watchdog = "*"
 
 
 [requires]

@@ -25,8 +25,8 @@ def main():
 @main.command('server')
 def server():
     click.echo('running server...')
-    pool = Pool(processes=2)
-    pool.map(run_process, SERVER_PROCESSES)
+    with Pool(processes=2) as pool:
+        pool.map(run_process, SERVER_PROCESSES)
 
 
 @main.command('chat-ssh')
