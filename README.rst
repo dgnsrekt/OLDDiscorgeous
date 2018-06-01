@@ -10,17 +10,21 @@ libnacl
 
 apt install libffi-dev libnacl-dev
 
+install python 3.6 on ubuntu 16.04
+https://www.rosehosting.com/blog/how-to-install-python-3-6-on-ubuntu-16-04/
+
 Features
 --------
 
 
 To Do
 -----
-Tests 
+Tests
 logging
 ssh client
 install cli
 client shell
+documentation / refactoring
 
 
 More Resources
