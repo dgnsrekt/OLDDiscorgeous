@@ -5,18 +5,24 @@ from gtts import gTTS as speech
 from tinytag import TinyTag
 from time import sleep
 
+from filelock import FileLock
+
 
 class VoiceMessageFile:
     def __init__(self):
         self.filepath = Path(__file__).parent / 'message.mp3'
         self.file = str(self.filepath)
+        self.filelock = FileLock(self.filepath.with_suffix('.lock'), timeout=0.01)
         # self.language = 'en-au'  # en-au, en-us, en-uk, random
 
     def create_message(self, message, language):
+        print('creating message')
         msg = speech(text=message,
                      lang=language,
                      slow=False)
+        print('saving message')
         msg.save(self.file)
+        print('done writing file')
 
     @property
     def duration(self):
@@ -39,7 +45,7 @@ class VoiceMessageFile:
 
     def remove(self):
         if self.file_exists:
-            sleep(1)
+            # sleep(.5)
             self.filepath.unlink()
 
     def __len__(self):

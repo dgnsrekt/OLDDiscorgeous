@@ -50,7 +50,9 @@ class DiscordGttsServerInput:  # TODO: Change to DiscordGttsInputServer
         while True:
             if not vmf.file_exists:
                 message = VoiceMessageQueue.pop()
-                vmf.create_message(message, self.language)  # logging here
+                with vmf.filelock:
+                    vmf.create_message(message, self.language)  # logging here
+                print('done writing')
             sleep(1)  # try .5 for speed
 
     def run(self):

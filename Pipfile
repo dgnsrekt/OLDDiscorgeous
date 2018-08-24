@@ -1,24 +1,19 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
 
-
-
 [packages]
-
 toml = "*"
 click = "*"
 gtts = "*"
 tinytag = "*"
 "discord.py" = {extras = ["voice"]}
 watchdog = "*"
-
+prompt-toolkit = "*"
+filelock = "*"
 
 [requires]
-
 python_version = "3.6"

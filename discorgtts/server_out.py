@@ -6,6 +6,7 @@ import os
 
 import discord
 from config import Configuration
+from filelock import Timeout
 
 from voice_message import VoiceMessageFile
 from time import time, sleep
@@ -24,7 +25,7 @@ if not discord.opus.is_loaded():
 
 class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
     def __init__(self, token,  channel_id, sample_rate=48000,
-                 audio_channel=1, sleep_time=0.75):
+                 audio_channel=1, sleep_time=.1):
 
         self.token = token
         self.channel_id = channel_id
@@ -49,26 +50,57 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
 
         while True:
             if self.vmf.file_exists:
-                await asyncio.sleep(self.sleep_time)
                 updated_time = self.vmf.mtime
+                # await asyncio.sleep(self.sleep_time)
 
                 if updated_time > start_time:
+                    print(start_time)
+                    print(updated_time)
                     start_time = updated_time
-                    player = voice.create_ffmpeg_player(self.vmf.file)
-                    player.start()
+                    print(start_time)
 
-                if player.is_done():
-                    player.stop()
-                    self.vmf.remove()
+                    # while file is locked wiath .01 else create and start
+                    while True:
+                        try:
+                            self.vmf.filelock.acquire()
+                            print('lock aquired')
+                            player = voice.create_ffmpeg_player(self.vmf.file)
+                            player.start()
+
+                            break
+                        except Timeout:
+                            print('.', end='', flush=True)
+                            sleep(.01)
+                            await asyncio.sleep(.01)
+                        finally:
+                            self.vmf.filelock.release()
+
+                    while not player.is_done():
+                        await asyncio.sleep(.01)
+                        print('.', end='', flush=True)
+
+                    else:
+                        print('done')
+                        player.stop()
+                        await asyncio.sleep(.01)
+                        self.vmf.remove()
+                        print('deleted')
+
+                # if player.is_done():
+                    # player.stop()
+                    # self.vmf.remove()
+                    # print('deleted')
 
                 if player.error:
+                    print('error')
                     print(player.error)
 
-                if player.is_playing() == False:
-                    player.stop()
-                    self.vmf.remove()
+                # if player.is_playing() == False:
+                    # player.stop()
+                    # self.vmf.remove()
+                    # print('deleted2')
 
-            await asyncio.sleep(self.sleep_time)
+            # await asyncio.sleep(self.sleep_time)
 
     def run(self):
         self.client.loop.create_task(self.on_ready())

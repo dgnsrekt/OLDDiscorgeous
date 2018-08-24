@@ -94,3 +94,6 @@ ENV/
 *.bak
 *.toml
 *.mp3
+
+# project
+message.lock
