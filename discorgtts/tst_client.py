@@ -84,7 +84,8 @@ And when you're dead I will be still alive
 Still alive.
 
 Still alive.""".split('\n')
-test_messages = quoteforce() + text3 + text2 + text1
+test_messages = quoteforce()
+# + text3 + text2 + text1
 test_messages = list(filter(None, test_messages))  # filter out empty str
 
 client = DiscorGttsClient('0.0.0.0', 6666)
