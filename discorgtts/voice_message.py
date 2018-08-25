@@ -6,6 +6,7 @@ from tinytag import TinyTag
 from time import sleep
 
 from filelock import FileLock
+from tenacity import retry, wait_random_exponential
 
 
 class VoiceMessageFile:
@@ -15,6 +16,7 @@ class VoiceMessageFile:
         self.filelock = FileLock(self.filepath.with_suffix('.lock'), timeout=0.01)
         # self.language = 'en-au'  # en-au, en-us, en-uk, random
 
+    @retry(wait=wait_random_exponential(multiplier=2, max=60))  # TODO: add specific error
     def create_message(self, message, language):
         print('creating message')
         msg = speech(text=message,

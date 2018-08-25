@@ -64,7 +64,13 @@ test_messages = list(filter(None, test_messages))  # filter out empty str
 
 client = DiscorGttsClient('0.0.0.0', 6666)
 
-for message in test_messages:
-    print(message)
-    client.send_voice_msg(message)
-    sleep(5)
+
+def bruteforce(n):
+    for message in test_messages:
+        print(message)
+        client.send_voice_msg(message)
+        sleep(n)
+
+
+for i in range(5, 0, -1):
+    bruteforce(i)

@@ -50,16 +50,12 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
 
         while True:
             if self.vmf.file_exists:
+                await asyncio.sleep(.01)
                 updated_time = self.vmf.mtime
-                # await asyncio.sleep(self.sleep_time)
 
-                if updated_time > start_time:
-                    print(start_time)
-                    print(updated_time)
+                if updated_time > start_time:  # TODO: move to VMF as is file ready.
                     start_time = updated_time
-                    print(start_time)
 
-                    # while file is locked wiath .01 else create and start
                     while True:
                         try:
                             self.vmf.filelock.acquire()
@@ -70,7 +66,6 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
                             break
                         except Timeout:
                             print('.', end='', flush=True)
-                            sleep(.01)
                             await asyncio.sleep(.01)
                         finally:
                             self.vmf.filelock.release()
@@ -82,7 +77,7 @@ class DiscordGttsServerOutput:  # TODO: Change to DiscordGttsOuput Server
                     else:
                         print('done')
                         player.stop()
-                        await asyncio.sleep(.01)
+                        # await asyncio.sleep(.01)
                         self.vmf.remove()
                         print('deleted')
 
