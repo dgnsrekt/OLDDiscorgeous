@@ -72,5 +72,8 @@ def bruteforce(n):
         sleep(n)
 
 
-for i in range(5, 0, -1):
-    bruteforce(i)
+while True:
+    for i in range(5, 0, -1):
+        bruteforce(i)
+    else:
+        sleep(30)

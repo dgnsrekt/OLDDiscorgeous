@@ -14,9 +14,7 @@ def get_coins():
     r = requests.get(url)
     data = r.json()
     binance = data['BINANCE']['coins']
-    # binance = [f'BINANCE:{coin}' for coin in binance]
     bittrex = data['BITTREX']['coins']
-    # bittrex = [f'BITTREX:{coin}' for coin in bittrex]
 
     coins = binance + bittrex
     return coins
@@ -24,10 +22,6 @@ def get_coins():
 
 client = DiscorGttsClient('0.0.0.0', 6666)
 
-# for message in test_messages:
-# print(message)
-# client.send_voice_msg(message)
-# sleep(5)
 
 for coin in get_coins():
     print(coin)
