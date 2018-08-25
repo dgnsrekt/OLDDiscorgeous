@@ -17,6 +17,17 @@ def get_quote():
             yield resp.json()[0]['content'].replace('<p>', '').replace('</p>', '').replace('&#8217;', "'")
 
 
+def quoteforce():
+    rand = randint(1, 25)
+    print(rand)
+    quotes = list()
+    for i, x in enumerate(get_quote()):
+        quotes.append(x)
+        if i == rand:
+            break
+    return quotes
+
+
 text1 = list('12345678910')
 text2 = list('abcdefghijklmnopqrstuvwxyz')
 text3 = """This was a triumph!
@@ -73,7 +84,7 @@ And when you're dead I will be still alive
 Still alive.
 
 Still alive.""".split('\n')
-test_messages = text3 + text2 + text1
+test_messages = quoteforce() + text3 + text2 + text1
 test_messages = list(filter(None, test_messages))  # filter out empty str
 
 client = DiscorGttsClient('0.0.0.0', 6666)
@@ -86,18 +97,8 @@ def bruteforce(n):
         sleep(n)
 
 
-def quoteforce():
-    rand = randint(1, 25)
-    print(rand)
-    for i, x in enumerate(get_quote()):
-        client.send_voice_msg(x)
-        if i == rand:
-            break
-
-
 while True:
     for i in range(5, 0, -1):
         bruteforce(i)
     else:
-        quoteforce()
         sleep(30)
