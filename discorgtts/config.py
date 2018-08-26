@@ -15,7 +15,7 @@ class Configuration:
                       'logging': 'DEBUG',
                       'encoder_sample_rate': '48000',
                       'encoder_channel': '1',
-                                         'max_connections': '5'}
+                      'max_connections': '5'}
 
     CLIENT_DEFAULT = {'host_address': '0.0.0.0',
                       'username': 'root',
@@ -41,6 +41,7 @@ class Configuration:
         try:
             with open(Configuration.CONFIG_PATH, 'r') as file:
                 return toml.loads(file.read())
+
         except FileNotFoundError:
             self.create_default_config_file()
             with open(Configuration.CONFIG_PATH, 'r') as file:

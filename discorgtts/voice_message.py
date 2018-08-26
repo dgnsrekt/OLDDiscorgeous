@@ -2,6 +2,7 @@ from pathlib import Path
 from multiprocessing import Queue
 
 from gtts import gTTS as speech
+from pydub import AudioSegment
 from tinytag import TinyTag
 from time import sleep
 
@@ -24,7 +25,17 @@ class VoiceMessageFile:
                      slow=False)
         print('saving message')
         msg.save(self.file)
+        sleep(0.01)
+        self.pitch_voice_up()
         print('done writing file')
+
+    def pitch_voice_up(self, octaves=0.5, sample_rate=48000, format='mp3'):
+        sound = AudioSegment.from_file(self.file, format=format)
+        new_sample_rate = int(sound.frame_rate * (2.0 ** octaves))
+
+        pitched = sound._spawn(sound.raw_data, overrides={'frame_rate': new_sample_rate})
+        pitched = pitched.set_frame_rate(sample_rate)
+        pitched.export(self.file, format=format)
 
     @property
     def duration(self):

@@ -4,11 +4,11 @@ Install
 -------
 On Linux environments, installing voice requires getting the following dependencies:
 
-libffi
-
-libnacl
-
+required for discord.py[voice]
 apt install libffi-dev libnacl-dev
+
+required for pydub
+apt-get install ffmpeg libavcodec-extra
 
 install python 3.6 on ubuntu 16.04
 https://www.rosehosting.com/blog/how-to-install-python-3-6-on-ubuntu-16-04/
