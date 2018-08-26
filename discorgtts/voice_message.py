@@ -25,11 +25,9 @@ class VoiceMessageFile:
                      slow=False)
         print('saving message')
         msg.save(self.file)
-        sleep(0.01)
-        self.pitch_voice_up()
         print('done writing file')
 
-    def pitch_voice_up(self, octaves=0.5, sample_rate=48000, format='mp3'):
+    def pitch_voice_up(self, octaves=0.15, sample_rate=48000, format='mp3'):
         sound = AudioSegment.from_file(self.file, format=format)
         new_sample_rate = int(sound.frame_rate * (2.0 ** octaves))
 
